@@ -1,0 +1,9 @@
+@startuml
+
+:Oczekuj¹cy: --> (Sprawdzenie listy kolejek)
+:Oczekuj¹cy: --> (Zapisanie do kolejki)
+
+:Pracownik dziekanatu: --> (Przyjêcie oczekuj¹cego)
+:Pracownik dziekanatu: --> (Sprawdzenie informacji o oczekuj¹cym)
+
+@enduml
