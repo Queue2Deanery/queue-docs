@@ -1,0 +1,13 @@
+@startuml
+
+:Zalogowany: -|> :U¿ytkownik:
+:Niezalogowany: -|> :U¿ytkownik:
+:Zalogowany: --> (Wylogowanie siê)
+:Zalogowany: --> (Sprawdzenie listy kolejek)
+:Zalogowany: --> (Zapisanie do kolejki)
+(Zapisanie do kolejki) ..> (Wypisanie z kolejki) : invokes
+
+:Niezalogowany: --> (Sprawdzenie listy kolejek)
+:Niezalogowany: --> (Zalogowanie siê)
+
+@enduml
