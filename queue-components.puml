@@ -1,0 +1,107 @@
+@startuml
+scale 0.4
+() https - nginx
+
+cloud "nginx api gateway" as nginx {
+}
+
+external --> nginx
+internal --> nginx
+
+
+
+
+package "API zewnętrzne dla studentów" as external {
+folder "przypadki użycia zewnętrzne" {
+[ActiveIssuesInQueueQuery]
+[UserDeleteIssueCommand]
+[UserIssueQuery]
+[UserPatchIssueCommand]
+[UserSubmitIssueCommand]
+[QueueQuery]
+[QueuesQuery]
+[UserQueuesQuery]
+}
+}
+() external_port - external
+() internal_port - internal
+
+package "API wewnętrzne dla dziekanatu" as internal {
+folder "przypadki użycia wewnętrzne" {
+[ActiveIssuesQuery]
+[IssueDetailsQuery]
+[IssueProcessingCompleteCommand]
+[IssueProcessingStartCommand]
+[IssueRemoveCommand]
+[IssuesQuery]
+[IssueCategoriesQuery]
+[IssueCategoryRemoveCommand]
+[IssueCategorySubmitCommand]
+[QueueQuery]
+[QueuesQuery]
+}
+}
+
+() auth_port - auth
+internal --> auth_port
+external --> auth_port
+
+
+
+package "Mail" as mail {
+folder "przypadki użycia microserwisu mail" {
+[TokenGenerationMessageConsumer]
+}
+}
+
+rabbit --> mail
+auth --> rabbit
+
+cloud "RabbitMQ kolejka" as rabbit {
+[queue]
+}
+
+package "API JWT LDAP autoryzacja/autentykacja" as auth {
+folder "przypadki użycia auth" {
+[LogTokenGenerationCommand]
+[TokenGenerationQuery]
+[TokenRevocationCommand]
+[TokenValidationQuery]
+}
+}
+
+internal --> queue_db_port
+external -->queue_db_port
+auth --> auth_db_port
+
+() queue_db_port - queuedb
+() auth_db_port - authdb
+
+database "PostgreSQL 1 instancja" {
+folder "queue_db" as queuedb {
+[field_of_study]
+[issue]
+[issue_category]
+[queue_]
+[active_issue_view]
+[issue_processing_est_view]
+}
+}
+
+database "PostgreSQL 2 instancja" {
+folder "authentication_db" as authdb {
+[revoked_jwt_token]
+[token_generation_audit]
+}
+}
+
+
+auth --> ldap
+database "LDAP PW" as ldap {
+folder "użytkownicy" {
+}
+}
+
+
+
+@enduml
